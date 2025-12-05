@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int **GetMatrix(int *row, int *col) {
+    int r, c;
+    
+    printf("Enter the number of rows: ");
+    if (scanf("%d", &r) != 1) {
+        printf("Invalid input for rows.\n");
+        exit(1);
+    }
+    printf("Enter the number of columns: ");
+    if (scanf("%d", &c) != 1) {
+        printf("Invalid input for columns.\n");
+        exit(1);
+    }
+
+    *row = r;
+    *col = c;
+
+    int **matrix = (int **)malloc(r * sizeof(int *));
+    if (matrix == NULL) {
+        perror("Failed to allocate memory for rows (int**)");
+        exit(1);
+    }
+
+    for (int i = 0; i < r; i++) {
+        matrix[i] = (int *)malloc(c * sizeof(int));
+        if (matrix[i] == NULL) {
+            perror("Failed to allocate memory for columns (int*)");
+            
+            for (int j = 0; j < i; j++) {
+                free(matrix[j]);
+            }
+            free(matrix);
+            exit(1);
+        }
+    }
+
+    printf("Enter the elements of the matrix:\n");
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            printf("Enter element at [%d][%d]: ", i, j);
+            if (scanf("%d", &matrix[i][j]) != 1) {
+                printf("Invalid input for element.\n");
+                
+                for (int k = 0; k < r; k++) {
+                    free(matrix[k]);
+                }
+                free(matrix);
+                exit(1);
+            }
+        }
+    }
+    return matrix;
+}
+
+void PrintMatrix(int **matrix, int row, int col) {
+    printf("\n--- Matrix ---\n");
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            printf("%4d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    printf("--------------\n");
+}
+
+void FreeMatrix(int **matrix, int row) {
+    if (matrix == NULL) return;
+    for (int i = 0; i < row; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+}
+
+int main() {
+    int **data;
+    int m, n;
+
+    data = GetMatrix(&m, &n);
+
+    PrintMatrix(data, m, n);
+
+    FreeMatrix(data, m);
+
+    return 0;
+}
