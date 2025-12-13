@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+void explode(char str1[], char splitter[], char str2[][10], int *count);
+
+void explode(char str1[], char splitter[], char str2[][10], int *count) {
+    char *token;
+    *count = 0;
+
+    char *temp_str1 = strdup(str1);
+    if (temp_str1 == NULL) {
+        return;
+    }
+
+    token = strtok(temp_str1, splitter);
+
+    while (token != NULL) {
+        if (strlen(token) < 10) { 
+            strcpy(str2[*count], token); 
+            
+            (*count)++;
+        } else {
+            printf("Warning: Token '%s' is too long for str2[][10]. Skipping.\n", token);
+        }
+        
+        token = strtok(NULL, splitter);
+    }
+    
+    free(temp_str1);
+}
+
+int main() {
+    char str1[50] = "I/Love/You";
+    char splitter[5] = "/";
+    char out[20][10]; 
+    int num_count;
+    
+    explode(str1, splitter, out, &num_count);
+    
+    printf("Input Str1: \"%s\"\n", str1);
+    printf("Splitter: \"%s\"\n", splitter);
+    printf("---------------------------\n");
+    printf("Total tokens: %d\n", num_count);
+
+    for (int i = 0; i < num_count; i++) {
+        printf("str2[%d] = \"%s\"\n", i, out[i]);
+    }
+
+    printf("\n--- Test Case 2 ---\n");
+    char str2[50] = "Apple,Banana,Orange";
+    char split2[5] = ",";
+    char out2[20][10]; 
+    int num_count2;
+    
+    explode(str2, split2, out2, &num_count2);
+
+    printf("Input Str2: \"%s\"\n", str2);
+    printf("Splitter: \"%s\"\n", split2);
+    printf("Total tokens: %d\n", num_count2);
+
+    for (int i = 0; i < num_count2; i++) {
+        printf("str2[%d] = \"%s\"\n", i, out2[i]);
+    }
+    
+    return 0;
+}
