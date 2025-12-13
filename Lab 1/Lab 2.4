@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int explode(char *str1, const char *splitter, char **str2, int max_tokens) {
+    int count = 0;
+    char *token;
+
+    token = strtok(str1, splitter);
+
+    while (token != NULL && count < max_tokens) {
+        str2[count] = token; 
+        count++;
+
+        token = strtok(NULL, splitter);
+    }
+    
+    if (*str1 == *splitter) {
+        for (int i = count; i > 0; i--) {
+            str2[i] = str2[i - 1];
+        }
+        str2[0] = "";
+        count++;
+    }
+
+    return count;
+}
+
+int main() {
+
+    char str1_data[] = "/I/Love/You"; 
+    const char *splitter = "/";
+    
+    int max_tokens = 10;
+    char *str2[max_tokens];
+    int count;
+
+    printf("--- Input ---\n");
+    printf("str1: \"%s\"\n", str1_data);
+    printf("splitter: '%s'\n", splitter);
+    printf("--------------\n");
+
+    count = explode(str1_data, splitter, str2, max_tokens);
+
+    printf("--- Output ---\n");
+    for (int i = 0; i < count; i++) {
+        printf("str2[%d] = \"%s\"\n", i, str2[i]);
+    }
+    printf("\n");
+    printf("count = %d\n", count);
+    printf("--------------\n");
+
+    return 0;
+}
