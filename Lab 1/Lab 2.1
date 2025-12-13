@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+
+void reverse(char source[], char destination[]) {
+    int len = strlen(source); 
+    int dest_index = 0; 
+
+    for (int src_index = len - 1; src_index >= 0; src_index--) {
+        destination[dest_index] = source[src_index];
+        dest_index++;
+    }
+
+    destination[dest_index] = '\0';
+}
+
+int main() {
+    char text1[50] = "Akkan";
+    char out1[50];
+    reverse(text1, out1);
+    
+    printf("Input 1: \"%s\"\n", text1);
+    printf("Output 1: \"%s\"\n", out1);
+
+    printf("---------------------------\n");
+
+    char text2[50] = "Kanthawong";
+    char out2[50];
+    reverse(text2, out2);
+
+    printf("Input 2: \"%s\"\n", text2);
+    printf("Output 2: \"%s\"\n", out2);
+    
+    return 0;
+}
