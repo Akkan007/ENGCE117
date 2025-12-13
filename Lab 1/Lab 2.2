@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* reverse(char str1[]);
+
+char* reverse(char source[]) {
+    int len = strlen(source);
+
+    char *destination = (char *)malloc(sizeof(char) * (len + 1));
+    
+    if (destination == NULL) {
+        return NULL;
+    }
+
+    int dest_index = 0;
+
+    for (int src_index = len - 1; src_index >= 0; src_index--) {
+        destination[dest_index] = source[src_index];
+        dest_index++;
+    }
+    destination[dest_index] = '\0';
+
+    return destination;
+}
+
+int main() {
+    char text[50] = "Akkan";
+    char *out;
+    
+    out = reverse(text);
+
+    printf("Input: \"%s\"\n", text);
+    
+    if (out != NULL) {
+        printf("Output: \"%s\"\n", out);
+        
+        free(out);
+    } else {
+        printf("Error: Memory allocation failed.\n");
+    }
+
+    printf("---------------------------\n");
+    
+    char text2[50] = "Kanthawong";
+    char *out2;
+
+    out2 = reverse(text2);
+    
+    printf("Input 2: \"%s\"\n", text2);
+
+    if (out2 != NULL) {
+        printf("Output 2: \"%s\"\n", out2);
+        free(out2);
+    } else {
+        printf("Error: Memory allocation failed.\n");
+    }
+    
+    return 0;
+}
