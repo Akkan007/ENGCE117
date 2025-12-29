@@ -1,0 +1,46 @@
+#include <stdio.h>
+
+struct Student {
+    char name[50];
+    int studentId;
+    float score;     
+};
+
+int main() {
+    int N;
+    float totalScore = 0.0;
+    float averageScore;
+
+    printf("Enter number of students: ");
+    scanf("%d", &N);
+
+    struct Student students[N];
+
+    for (int i = 0; i < N; i++) {
+        printf("\nStudent %d\n", i + 1);
+        
+        printf("Enter Student ID: ");
+        scanf("%d", &students[i].studentId);
+
+        printf("Enter Score: ");
+        scanf("%f", &students[i].score);
+
+        printf("Enter Name: ");
+        scanf(" %[^\n]s", students[i].name);
+
+        totalScore += students[i].score;
+    }
+
+    if (N > 0) {
+        averageScore = totalScore / N;
+        
+        printf("\n------------------------------\n");
+        printf("Total Score: %.2f\n", totalScore);
+        printf("Average Score: %.2f\n", averageScore);
+        printf("------------------------------\n");
+    } else {
+        printf("No students to calculate.\n");
+    }
+
+    return 0;
+}
