@@ -1,0 +1,44 @@
+#include <stdio.h>
+
+struct Student {
+    char name[50];
+    int studentId;
+    float score;
+};
+
+int main() {
+    int N, i;
+    int passCount = 0;
+    int failCount = 0;
+
+    printf("Enter number of students: ");
+    if (scanf("%d", &N) != 1) {
+        return 1;
+    }
+
+    struct Student students[N];
+
+    for (i = 0; i < N; i++) {
+        printf("\nStudent %d\n", i + 1);
+        printf("Enter ID: ");
+        scanf("%d", &students[i].studentId);
+        printf("Enter Name: ");
+        scanf("%s", students[i].name);
+        printf("Enter Score: ");
+        scanf("%f", &students[i].score);
+    }
+
+    for (i = 0; i < N; i++) {
+        if (students[i].score >= 60.0) {
+            passCount++;
+        } else {
+            failCount++;
+        }
+    }
+
+    printf("\n--- Summary ---\n");
+    printf("Pass Count: %d\n", passCount);
+    printf("Fail Count: %d\n", failCount);
+
+    return 0;
+}
