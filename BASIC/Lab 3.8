@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+struct Campaign {
+    char name[50];
+    float productPrice;
+    int salesCount;
+    float adSpend;
+};
+
+int main() {
+    int N, i;
+
+    printf("Enter number of campaigns: ");
+    if (scanf("%d", &N) != 1) {
+        return 1;
+    }
+
+    struct Campaign campaigns[N];
+
+    for (i = 0; i < N; i++) {
+        printf("\n--- Campaign %d ---\n", i + 1);
+        printf("Name: ");
+        scanf("%s", campaigns[i].name);
+        printf("Product Price: ");
+        scanf("%f", &campaigns[i].productPrice);
+        printf("Sales Count: ");
+        scanf("%d", &campaigns[i].salesCount);
+        printf("Ad Spend: ");
+        scanf("%f", &campaigns[i].adSpend);
+
+        float commissionRate = 0.0;
+        float totalRevenue;
+        float totalCommission;
+        float netProfitLoss;
+
+        if (campaigns[i].salesCount >= 20) {
+            commissionRate = 0.20;
+        } else if (campaigns[i].salesCount >= 10) {
+            commissionRate = 0.15;
+        } else {
+            commissionRate = 0.10;
+        }
+
+        totalRevenue = campaigns[i].salesCount * campaigns[i].productPrice;
+        totalCommission = totalRevenue * commissionRate;
+        netProfitLoss = totalCommission - campaigns[i].adSpend;
+
+        printf("\n--- Results for: %s ---\n", campaigns[i].name);
+        printf("Sales: %d units | Ad Spend: %.2f\n", campaigns[i].salesCount, campaigns[i].adSpend);
+        printf("Commission Rate: %.0f%%\n", commissionRate * 100);
+        printf("Total Revenue: %.2f\n", totalRevenue);
+        printf("Total Commission: %.2f\n", totalCommission);
+        printf("Net Profit/Loss: %.2f\n", netProfitLoss);
+        
+        if (netProfitLoss >= 0) {
+            printf("Status: PROFIT\n");
+        } else {
+            printf("Status: LOSS\n");
+        }
+    }
+
+    return 0;
+}
