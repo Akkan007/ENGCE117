@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct studentNode {
+    char name[20];
+    int age;
+    char sex;
+    float gpa;
+    struct studentNode *next;
+};
+
+typedef struct LinkedList {
+    struct studentNode *start;
+    struct studentNode *now;
+} LinkedList;
+
+struct studentNode* createNode(char n[], int a, char s, float g) {
+    struct studentNode* newNode = (struct studentNode*)malloc(sizeof(struct studentNode));
+    strcpy(newNode->name, n);
+    newNode->age = a;
+    newNode->sex = s;
+    newNode->gpa = g;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void InsNode(LinkedList *list, char n[], int a, char s, float g) {
+    struct studentNode* newNode = createNode(n, a, s, g);
+    if (list->start == NULL) {
+        list->start = newNode;
+        list->now = newNode;
+    } else {
+        struct studentNode* temp = list->start;
+        while (temp->next != NULL) temp = temp->next;
+        temp->next = newNode;
+    }
+}
+
+void GoNext(LinkedList *list) {
+    if (list->now != NULL && list->now->next != NULL) {
+        list->now = list->now->next;
+    }
+}
+
+void DelNode(LinkedList *list) {
+}
+
+void ShowNode(LinkedList *list) {
+    if (list->now != NULL) {
+        printf("%s %d %c %.2f\n", list->now->name, list->now->age, list->now->sex, list->now->gpa);
+    }
+}
+
+void ShowNodeNewList(LinkedList *list) {
+    if (list->now != NULL) {
+        printf("%s ", list->now->name);
+        if (list->start != NULL) printf("%s\n", list->start->name);
+    }
+}
+
+int main() {
+    LinkedList listA = {NULL, NULL};
+    LinkedList listB = {NULL, NULL};
+    LinkedList *listC;
+
+    InsNode(&listA, "one", 1, 'A', 1.1);
+    InsNode(&listA, "two", 2, 'B', 2.2);
+    InsNode(&listA, "three", 3, 'C', 3.3);
+    GoNext(&listA);
+    ShowNode(&listA);
+
+    InsNode(&listB, "four", 4, 'D', 4.4);
+    InsNode(&listB, "five", 5, 'E', 5.5);
+    InsNode(&listB, "six", 6, 'F', 6.6);
+    listB.now = listB.start->next->next;
+    ShowNodeNewList(&listB);
+
+    listC = &listA;
+    listC->now = listA.start;
+    ShowNode(listC);
+
+    listC = &listB;
+    ShowNodeNewList(listC);
+
+    return 0;
+}
