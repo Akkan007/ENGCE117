@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct studentNode {
+    char name[20];
+    int age;
+    char sex;
+    float gpa;
+    struct studentNode *next;
+};
+
+struct studentNode* createNode(char n[], int a, char s, float g) {
+    struct studentNode *newNode = (struct studentNode*)malloc(sizeof(struct studentNode));
+    strcpy(newNode->name, n);
+    newNode->age = a;
+    newNode->sex = s;
+    newNode->gpa = g;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void AddData(struct studentNode **start) {
+    char n[20], s;
+    int a;
+    float g;
+    printf("Enter Name: "); scanf("%s", n);
+    printf("Enter Age: ");  scanf("%d", &a);
+    printf("Enter Sex (M/F): "); scanf(" %c", &s);
+    printf("Enter GPA: ");  scanf("%f", &g);
+
+    struct studentNode *newNode = createNode(n, a, s, g);
+    newNode->next = *start;
+    *start = newNode;
+    printf("Added successfully!\n");
+}
+
+void ShowAll(struct studentNode *current) {
+    printf("\n--- Student List ---\n");
+    while (current != NULL) {
+        printf("Name: %-10s | Age: %d | Sex: %c | GPA: %.2f\n", 
+               current->name, current->age, current->sex, current->gpa);
+        current = current->next;
+    }
+}
+
+struct studentNode* FindData(struct studentNode *start) {
+    char n[20];
+    printf("Enter name to find: ");
+    scanf("%s", n);
+    struct studentNode *curr = start;
+    while (curr != NULL) {
+        if (strcmp(curr->name, n) == 0) {
+            printf("Found: %s, Age: %d, GPA: %.2f\n", curr->name, curr->age, curr->gpa);
+            return curr;
+        }
+        curr = curr->next;
+    }
+    printf("Not found!\n");
+    return NULL;
+}
+
+void EditData(struct studentNode *start) {
+    struct studentNode *target = FindData(start);
+    if (target != NULL) {
+        printf("Enter New Age: "); scanf("%d", &target->age);
+        printf("Enter New Sex: "); scanf(" %c", &target->sex);
+        printf("Enter New GPA: "); scanf("%f", &target->gpa);
+        printf("Updated!\n");
+    }
+}
+
+void DelNode(struct studentNode **start) {
+    if (*start == NULL) return;
+    struct studentNode *temp = *start;
+    *start = (*start)->next;
+    free(temp);
+    printf("Deleted the first node.\n");
+}
+
+void writefile(struct studentNode *start) {
+    FILE *fp = fopen("students.dat", "wb");
+    struct studentNode *curr = start;
+    while (curr != NULL) {
+        fwrite(curr, sizeof(struct studentNode) - sizeof(struct studentNode*), 1, fp);
+        curr = curr->next;
+    }
+    fclose(fp);
+}
+
+void readfile(struct studentNode **start) {
+    FILE *fp = fopen("students.dat", "rb");
+    if (fp == NULL) return;
+    struct studentNode temp;
+    while (fread(&temp, sizeof(struct studentNode) - sizeof(struct studentNode*), 1, fp)) {
+        struct studentNode *newNode = createNode(temp.name, temp.age, temp.sex, temp.gpa);
+        newNode->next = *start;
+        *start = newNode;
+    }
+    fclose(fp);
+}
+
+int main() {
+    struct studentNode *listA = NULL;
+    int menu;
+
+    readfile(&listA);
+
+    do {
+        printf("\nMenu: (1) Add (2) Edit (3) Delete (4) Find (5) Show (0) Exit: ");
+        scanf("%d", &menu);
+
+        switch (menu) {
+            case 1: AddData(&listA); break;
+            case 2: EditData(listA); break;
+            case 3: DelNode(&listA); break;
+            case 4: FindData(listA); break;
+            case 5: ShowAll(listA); break;
+        }
+    } while (menu != 0);
+
+    writefile(listA);
+    return 0;
+}
