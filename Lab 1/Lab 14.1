@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int KnapsackBT(int *w, int *v, int n, int wx, int i, int *x) {
+    if (i == n || wx <= 0) {
+        return 0;
+    }
+
+    if (w[i] > wx) {
+        x[i] = 0;
+        return KnapsackBT(w, v, n, wx, i + 1, x);
+    } else {
+        
+        int *temp_x_exclude = (int*)malloc(n * sizeof(int));
+        for(int k=0; k<n; k++) temp_x_exclude[k] = x[k];
+        temp_x_exclude[i] = 0;
+        int res_exclude = KnapsackBT(w, v, n, wx, i + 1, temp_x_exclude);
+
+        int *temp_x_include = (int*)malloc(n * sizeof(int));
+        for(int k=0; k<n; k++) temp_x_include[k] = x[k];
+        temp_x_include[i] = 1;
+        int res_include = v[i] + KnapsackBT(w, v, n, wx - w[i], i + 1, temp_x_include);
+
+        if (res_include >= res_exclude) {
+            for(int k=i; k<n; k++) x[k] = temp_x_include[k];
+            free(temp_x_exclude);
+            free(temp_x_include);
+            return res_include;
+        } else {
+            for(int k=i; k<n; k++) x[k] = temp_x_exclude[k];
+            free(temp_x_exclude);
+            free(temp_x_include);
+            return res_exclude;
+        }
+    }
+}
+
+int main() {
+    int n = 5, wx = 11;
+    int w[5] = { 1, 2, 5, 6, 7 };
+    int v[5] = { 1, 6, 18, 22, 28 };
+    int *x, vx;
+
+    x = (int*)malloc(n * sizeof(int));
+    for(int i = 0; i < n; i++) x[i] = 0;
+
+    vx = KnapsackBT(w, v, n, wx, 0, x);
+
+    printf("Value = %d\n", vx);
+    for (int i = 0; i < n; i++) {
+        printf("%d ", x[i]);
+    }
+    printf("\n");
+
+    free(x);
+    return 0;
+}
